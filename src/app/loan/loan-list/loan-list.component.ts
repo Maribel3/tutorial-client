@@ -1,6 +1,6 @@
 import { Component, OnInit,Inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Loan } from '../module/Loan';
+import { Loan } from '../model/Loan';
 import { LoanService } from '../loan.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoanEditComponent } from '../loan-edit/loan-edit.component';
@@ -16,6 +16,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { ThisReceiver } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
 import { throwToolbarMixedModesError } from '@angular/material/toolbar';
+import { Pageable } from 'src/app/core/model/page/Pageable';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-loan-list',
@@ -25,7 +27,10 @@ import { throwToolbarMixedModesError } from '@angular/material/toolbar';
   
 
 export class LoanListComponent implements OnInit {
- 
+  pageNumber: number = 0;
+  pageSize: number = 5;
+  totalElements: number = 0;
+
  public fec : Date;
  public fetString: string;
   public formatDate: string;
@@ -67,7 +72,7 @@ onSelectGame(games: Game) : number{
 
   }
   ngOnInit(): void {
-   
+    this.loadPage();
 
     this.searchDate();
       this.loanService.getLoans().subscribe(
@@ -81,11 +86,35 @@ onSelectGame(games: Game) : number{
     );
     
   }
+  loadPage(event?: PageEvent) {
 
+    let pageable: Pageable = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      sort: [{
+        property: 'id',
+        direction: 'ASC'
+      }]
+    }
+
+    if (event != null) {
+      pageable.pageSize = event.pageSize
+      pageable.pageNumber = event.pageIndex;
+    }
+
+    //this.loanService.getLoans(pageable).subscribe(data => {
+     // this.dataSource.data = data.content;
+      //this.pageNumber = data.pageable.pageNumber;
+      //this.pageSize = data.pageable.pageSize;
+      //this.totalElements = data.totalElements;
+    //});
+
+  }
   onCleanFilter(): void{
     this.selectedGame = null;
    
     this.selectedClient = null;
+   
   
     this.onSearch();
    

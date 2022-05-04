@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable,of } from 'rxjs';
-import { Loan } from './module/Loan';
+import { Loan } from './model/Loan';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
 

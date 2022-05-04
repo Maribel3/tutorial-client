@@ -7,7 +7,7 @@ import { Client } from 'src/app/client/model/Client';
 import { FormGroup, FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Loan } from '../module/Loan';
+import { Loan } from '../model/Loan';
 import { LoanService } from '../loan.service';
 
 @Component({
@@ -51,7 +51,7 @@ export class LoanEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+   
   
     if (this.data.loan != null) {
       this.loan = Object.assign({}, this.data.game);

@@ -1,0 +1,39 @@
+<div class="container">
+        <h1 *ngIf="loan.id == null">Crear Préstamo</h1>
+
+    <form>
+        <mat-form-field>
+            <mat-label>Identificador</mat-label>
+            <input type="number" matInput placeholder="Identificador" name="id" [(ngModel)]="loan.id" disabled>
+        </mat-form-field>
+    <mat-form-field>
+        <mat-label>Selecciona un juego</mat-label>
+        <mat-select disableRipple [(ngModel)]="loan.game" name="game" >
+            <mat-option *ngFor="let game  of games" [value]="game" (click)="onSelectGame(game)">{{game.title}}></mat-option>
+    
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Selecciona un cliente</mat-label>
+        <mat-select disableRipple [(ngModel)]="loan.client" name="client">
+            <mat-option *ngFor="let client of clients"  [value]="client" (click)="onSelectClient(client)">{{client.name}}
+            </mat-option>
+        </mat-select>
+    
+    </mat-form-field>
+    <mat-form-field [formGroup]="range">
+        <input matInput [matDatepicker]="myDatePicker" formControlName="start" name="dateLoan" id="start1">
+        <mat-datepicker-toggle [for]="myDatePicker" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #myDatePicker></mat-datepicker>
+    </mat-form-field>
+<mat-form-field [formGroup]="range">
+    <input matInput [matDatepicker]="myDatePicker1" formControlName="end" name="dateReturn" [min]="minimo">
+    <mat-datepicker-toggle [for]="myDatePicker1" matSuffix></mat-datepicker-toggle>
+    <mat-datepicker #myDatePicker1></mat-datepicker>
+</mat-form-field>
+    </form>
+<div class="buttons">
+    <button mat-stroked-button (click)="onClose()">Cerrar</button>
+    <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+</div>
+</div>

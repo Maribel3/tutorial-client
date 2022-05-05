@@ -40,47 +40,34 @@ export class ClientService {
     return this.http.delete<void>('http://localhost:8080/client/' + idClient);
   }
 
-  validateClient(name? : string): void {
-   const valor1 = 0;
-    let params = '';
-    alert ("nombre " + name);
-    
+  //validateClient(name? : string): void {
    
-    if (name != null) {
-      
-     // params += 'name=' + name;
-    }
-    
    
-    let url = 'http://localhost:8080/client/validar?name=' + name;
-    //if (params == '')  url;
-    //else  url + '?' + params;
+    //let url = 'http://localhost:8080/client/validar?name=' + name;
+    
+    //this.http.get<number>(url).subscribe(responseData =>{
+     // this.obtenerValor();
+      //this.resultado =responseData;
+      //const valor1 = this.resultado;
+      //this.resultado = responseData ;
      
-    this.http.get<number>(url).subscribe(responseData =>{
-      this.obtenerValor();
-      this.resultado =responseData;
-      const valor1 = this.resultado;
-      this.resultado = responseData ;
-       alert(responseData + " el resultado es: ")
-       if(this.resultado >= 1 ){
+    //   if(this.resultado >= 1 ){
          
-         alert("No puede crear el cliente " + valor1);
+     //    alert("No puede crear el cliente " + valor1);
       
-       }
-       if (this.resultado == 0) {
-        return  0;
-         alert("resultado 2 " + valor1);
-         
-       }
+     //  }
+      // if (this.resultado == 0) {
+      
+       //}
        
-     });
+     //});
    
-    }
+    //}
  
-    obtenerValor (): number {
-     return  this.resultado
+   // obtenerValor (): number {
+     //return  this.resultado
       
-    }
+    //}
 
   }
 

@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Loan } from '../model/Loan';
 import { LoanService } from '../loan.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-loan-edit',
@@ -32,19 +33,21 @@ export class LoanEditComponent implements OnInit {
   });
   selectedGame: Game;
   selectedClient: Client;
-  minimo : Date;
+  resultadoLoan : number;
   onSelectGame(game: Game): void {
     this.selectedGame = game;
   }
   onSelectClient(client: Client): void {
     this.selectedClient = client;
-    alert("client " + this.selectedClient.id)
+   
   }
   constructor(
     public dialogRef: MatDialogRef<LoanEditComponent>,
     private clientService: ClientService,
     private pd: DatePipe,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private http: HttpClient,
+
 
     private gameService: GameService,
     private loanService: LoanService,
@@ -77,14 +80,40 @@ export class LoanEditComponent implements OnInit {
     
     this.fechaInicial = this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY' );
     this.fechaFinal = this.pd.transform(this.range.controls.end.value, 'dd-MM-YYYY');
-   // this.range.controls.final = this.range.controls.start;
-   // this.fechaFinBase = this.pd.transform(this.range.controls.final.value.setDate(this.range.controls.final.value.getDate() + 14));
-   // this.fechaLimite = this.pd.transform(this.range.controls.start.value.setDate(this.range.controls.start.value.getDate() + 14));
-   // this.fechaLimite = this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
-   // this.fechaFinBase = this.pd.transform(this.range.controls.final.value, 'dd-MM-YYYY');
+  
     this.fechaInicialBase = this.pd.transform(this.range.controls.start.value, 'YYYY-MM-dd');
     this.fechaFinalBase = this.pd.transform(this.range.controls.end.value, 'YYYY-MM-dd');
+
+    let params = '';
+
+    if (this.selectedGame != null) {
+      
+      params += "game_id=" + this.selectedGame;
+    }
+
+    if (this.fechaInicialBase != null) {
+      if (params != '') params += "&";
+
+      params += 'date_loan=' + this.fechaInicialBase;
+
+    }
+    let urlValidateLoan = 'http://localhost:8080/load/validateLoan';
+
+    
+  
+
+   alert("fechaa " + this.fechaInicialBase);
+    this.http.get<number>(urlValidateLoan).subscribe(responseDataLoan =>{
+     
+      this.resultadoLoan = responseDataLoan;
+      alert("juego " + this.resultadoLoan);
+      if(this.resultadoLoan >= 1){
+        alert("Juego prestado el mismo día");
+      }
+    });
    
+   
+
     let days = (this.range.controls.end.value.getDate() - (this.range.controls.start.value.getDate()));
     alert("dias restantes = " + days);
     
@@ -96,7 +125,6 @@ export class LoanEditComponent implements OnInit {
    if (days<=14 && new Date(this.range.controls.start.value) < new Date(this.range.controls.end.value)){
      alert("start  end " );
      
-    // if ( days <=14){
        alert("fecha inicial inferior a la fecha final");
        this.loan.client = this.selectedClient;
        this.loan.game = this.selectedGame;
@@ -110,8 +138,6 @@ export class LoanEditComponent implements OnInit {
      else {
        alert("la fecha inicial no es inferior a la fecha final");
      }
-   
-  
    
   }
   }

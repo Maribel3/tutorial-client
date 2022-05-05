@@ -18,6 +18,8 @@ import { DatePipe } from '@angular/common';
 import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { Pageable } from 'src/app/core/model/page/Pageable';
 import { PageEvent } from '@angular/material/paginator';
+import { MatInput } from '@angular/material/input';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-loan-list',
@@ -27,16 +29,22 @@ import { PageEvent } from '@angular/material/paginator';
   
 
 export class LoanListComponent implements OnInit {
+  @ViewChild('input', { read: MatInput }) input: MatInput;
+  ngAfterViewInit() { }
+
+  
+  
+  
   pageNumber: number = 0;
   pageSize: number = 5;
   totalElements: number = 0;
 
  public fec : Date;
  public fetString: string;
-  public formatDate: string;
+ public formatDate: string;
 
   games: Game[];
-  //loan : Loan[];
+ 
 
   loan : Loan;
   clients : Client[];
@@ -102,20 +110,12 @@ onSelectGame(games: Game) : number{
       pageable.pageNumber = event.pageIndex;
     }
 
-    //this.loanService.getLoans(pageable).subscribe(data => {
-     // this.dataSource.data = data.content;
-      //this.pageNumber = data.pageable.pageNumber;
-      //this.pageSize = data.pageable.pageSize;
-      //this.totalElements = data.totalElements;
-    //});
+  
 
   }
   onCleanFilter(): void{
     this.selectedGame = null;
-   
     this.selectedClient = null;
-   
-  
     this.onSearch();
    
   }
@@ -167,13 +167,9 @@ onSelectGame(games: Game) : number{
    
    
 enviar () {
- // this.fec = new Date(new Date().getFullYear(), new Date().getMonth(),new Date().getDate());
-  //this.fetString = this.pd.transform(this.fec,"yyyy-MM-dd");
-  //today: stringify = this.range.controls.start;
- this.formatDate= this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
+this.formatDate= this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
 this.fetString = this.pd.transform(this.range.controls.start.value,'YYY-MM-dd');
-  alert("fecha normal " + this.formatDate
-  + "fecha invertida " + this.fetString);
+
 
 }
  public  searchDate(){

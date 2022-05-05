@@ -58,7 +58,7 @@ if (client_id != null){
 
     }
 
-    let url = 'http://localhost:8080/load/Search/'
+    let url = 'http://localhost:8080/load/search/'
 
     if (params =='') return url;
     else return url +'?' + params;
@@ -89,7 +89,7 @@ if (client_id != null){
   findSearchFilter(game_id?: number, client_id?: number, fecha?:string): string {
     let para = '';
     fecha = this.conversion;
-   //this.conversion = this.searchDate();
+   
    
     if (game_id != null) {
       para += "game_id=" + game_id;

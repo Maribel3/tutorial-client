@@ -17,12 +17,12 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field [formGroup]="range">
-                <input matInput [matDatepicker]="myDatePicker" formControlName="start">
-                <mat-datepicker-toggle [for]="myDatePicker" matSuffix></mat-datepicker-toggle>
+                <input matInput [matDatepicker]="myDatePicker" formControlName="start"  id="capturar">
+                <mat-datepicker-toggle [for]="myDatePicker"  matSuffix></mat-datepicker-toggle>
                 <mat-datepicker #myDatePicker></mat-datepicker>
             </mat-form-field>
             <div class="buttons">
-                <button mat-stroked-button (click)="onCleanFilter()">Limpiar</button>
+                <button mat-stroked-button   (click)="onCleanFilter()">Limpiar</button>
                 <button mat-stroked-button (click)="onSearch()">Filtrar</button>
             </div>
             <mat-table [dataSource]="dataSource">

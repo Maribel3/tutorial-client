@@ -29,7 +29,10 @@ import { ViewChild } from '@angular/core';
   
 
 export class LoanListComponent implements OnInit {
- 
+  @ViewChild('fromInput', {
+    read: MatInput
+  }) fromInput: MatInput;
+
   pageNumber: number = 0;
   pageSize: number = 5;
   totalElements: number = 0;
@@ -108,6 +111,7 @@ onSelectGame(games: Game) : number{
   onCleanFilter(): void{
     this.selectedGame = null;
     this.selectedClient = null;
+    this.fromInput.value = '';
     this.onSearch();
    this.loanService.getLoans().subscribe(
      loan => this.dataSource.data = loan
@@ -132,7 +136,7 @@ onSelectGame(games: Game) : number{
       fechaBusqueda = this.fetString;
     }
 
-    alert("Fecha busqueda " + fechaBusqueda)
+   
     this.loanService.getLoans(idGame, idClient,fechaBusqueda).subscribe(
       loan1 => this.dataSource.data = loan1
 
@@ -169,10 +173,6 @@ this.fetString = this.pd.transform(this.range.controls.start.value,'YYY-MM-dd');
  
   }
   
-  public classGame(): Game[]{
-    
-    return this.games;
-  }
   deleteLoan(loan: Loan) {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
       data: { title: "Eliminar préstamo ", description: "Atención si borra el préstamo se perderán sus datos.<br> ¿Desea eliminar el préstamo?" }

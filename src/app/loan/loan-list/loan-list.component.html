@@ -17,7 +17,7 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field [formGroup]="range">
-                <input matInput [matDatepicker]="myDatePicker" formControlName="start"  id="capturar">
+                <input #fromInput matInput [matDatepicker]="myDatePicker" formControlName="start"  id="capturar">
                 <mat-datepicker-toggle [for]="myDatePicker"  matSuffix></mat-datepicker-toggle>
                 <mat-datepicker #myDatePicker></mat-datepicker>
             </mat-form-field>

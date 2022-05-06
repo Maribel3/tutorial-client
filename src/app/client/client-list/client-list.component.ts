@@ -5,17 +5,28 @@ import { ClientService } from '../client.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ClientEditComponent } from '../client-edit/client-edit.component';
 import { DialogConfirmationComponent } from 'src/app/core/dialog-confirmation/dialog-confirmation.component';
+import { LoanService } from 'src/app/loan/loan.service';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.scss']
 })
 export class ClientListComponent implements OnInit {
+  selectedClient: Client;
+  clientsLoad: number;
+  onSelectClient(client: Client): void {
+    this.selectedClient = client;
+
+  }
   dataSource = new MatTableDataSource<Client>();
   displayedColumns:string[]= ['id', 'name', 'action'];
   constructor(
     private clientService: ClientService,
     public dialog: MatDialog,
+    private http: HttpClient,
+    private loanService : LoanService
   ) { }
   createClient() {
     const dialogRef = this.dialog.open(ClientEditComponent, {
@@ -43,16 +54,33 @@ export class ClientListComponent implements OnInit {
   }
 
   deleteClient(client: Client) {
-    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-      data: { title: "Eliminar cliente", description: "Atención si borra el cliente se perderán sus datos.<br> ¿Desea eliminar el cliente?" }
-    });
+ 
+    let url = 'http://localhost:8080/load/comprobarClientePrestamo?client_id=' + client.id;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.clientService.deleteClient(client.id).subscribe(result => {
-          this.ngOnInit();
+    this.http.get<number>(url).subscribe( responseData => {
+      this.clientsLoad = responseData;
+
+      if(this.clientsLoad >=1){
+        alert("No puede borrar un cliente que tiene prestamos");
+        this.dialog.afterAllClosed;
+      }
+      else {
+
+        const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+          data: { title: "Eliminar cliente", description: "Atención si borra el cliente se perderán sus datos.<br> ¿Desea eliminar el cliente?" }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.clientService.deleteClient(client.id).subscribe(result => {
+              this.ngOnInit();
+            });
+          }
         });
       }
+
     });
+ 
+
   }
 }

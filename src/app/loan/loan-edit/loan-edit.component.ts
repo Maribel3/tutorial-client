@@ -114,7 +114,7 @@ export class LoanEditComponent implements OnInit {
       
       this.resultadoLoan = responseDataLoan;
     
-      if (this.resultadoGameClient< 2 && this.resultadoLoan == 0 && (days <= 14 && new Date(this.range.controls.start.value) < new Date(this.range.controls.end.value))){
+      if (this.resultadoGameClient< 2 && this.resultadoLoan == 0 && (days <= 14 && new Date(this.range.controls.start.value) <= new Date(this.range.controls.end.value))){
        this.loan.client = this.selectedClient;
        this.loan.game = this.selectedGame;
        this.loan.dateLoan = this.fechaInicialBase;

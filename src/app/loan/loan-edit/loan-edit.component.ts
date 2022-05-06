@@ -10,6 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Loan } from '../model/Loan';
 import { LoanService } from '../loan.service';
 import { HttpClient } from '@angular/common/http';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-loan-edit',
@@ -34,6 +35,7 @@ export class LoanEditComponent implements OnInit {
   selectedGame: Game;
   selectedClient: Client;
   resultadoLoan : number;
+  resultadoGameClient: number;
   onSelectGame(game: Game): void {
     this.selectedGame = game;
   }
@@ -88,58 +90,57 @@ export class LoanEditComponent implements OnInit {
 
     if (this.selectedGame != null) {
       
-      params += "game_id=" + this.selectedGame;
+      params += 'fecha=' + this.fechaInicialBase;
     }
 
     if (this.fechaInicialBase != null) {
       if (params != '') params += "&";
 
-      params += 'date_loan=' + this.fechaInicialBase;
+      params += "game_id=" + this.selectedGame;
 
     }
-    let urlValidateLoan = 'http://localhost:8080/load/validateLoan';
-
-    
-  
-
-   alert("fechaa " + this.fechaInicialBase);
-    this.http.get<number>(urlValidateLoan).subscribe(responseDataLoan =>{
-     
-      this.resultadoLoan = responseDataLoan;
-      alert("juego " + this.resultadoLoan);
-      if(this.resultadoLoan >= 1){
-        alert("Juego prestado el mismo día");
-      }
-    });
-   
-   
+    let urlValidateLoan = 'http://localhost:8080/load/validateLoan?fecha='+this.fechaInicialBase+'&game_id='+this.selectedGame.id ;
+    let urlValidateClientLoan = 'http://localhost:8080/load/validateGameLoad?fecha=' + this.fechaInicialBase + '&client_id=' + this.selectedClient.id;
+    // days da resto de la fecha de inicio y la fecha fin
 
     let days = (this.range.controls.end.value.getDate() - (this.range.controls.start.value.getDate()));
-    alert("dias restantes = " + days);
-    
-    if ( days>=15) {
-    alert("La fecha final no puede superar los 14 días")
-  
-    } 
- else {
-   if (days<=14 && new Date(this.range.controls.start.value) < new Date(this.range.controls.end.value)){
-     alert("start  end " );
+   
+
+    this.http.get<number>(urlValidateLoan).subscribe(responseDataLoan =>{
      
-       alert("fecha inicial inferior a la fecha final");
+     this.http.get<number>(urlValidateClientLoan).subscribe(responseDateClient =>{
+     
+       this.resultadoGameClient = responseDateClient;
+      
+      this.resultadoLoan = responseDataLoan;
+    
+      if (this.resultadoGameClient< 2 && this.resultadoLoan == 0 && (days <= 14 && new Date(this.range.controls.start.value) < new Date(this.range.controls.end.value))){
        this.loan.client = this.selectedClient;
        this.loan.game = this.selectedGame;
        this.loan.dateLoan = this.fechaInicialBase;
        this.loan.dateReturn = this.fechaFinalBase;
        this.loanService.saveLoan(this.loan).subscribe(result => {
          this.dialogRef.close();
-       });
+      });
+        
+      }
+      else {
+        if(this.resultadoLoan>=1){
+          alert("Juego prestado el mismo día");
+        }
+        if (days>=15){
+          alert("La fecha final no puede superar los 14 días");
+        }
+        if(this.resultadoGameClient>=2){
+          alert("Tiene dos juegos prestados");
+          this.dialogRef.close();
+        }
 
-     }
-     else {
-       alert("la fecha inicial no es inferior a la fecha final");
-     }
+      }
+     });// fin consulta juegos
+    });//fin consulta fecha duplicada
+
    
-  }
   }
   onClose() {
     this.dialogRef.close();

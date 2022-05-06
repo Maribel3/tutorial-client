@@ -84,6 +84,12 @@ if (client_id != null){
     if (game_id != null && client_id == null && fecha == null){
       return this.http.get<Loan[]>(this.findGame(game_id));
     }
+
+    if (game_id ==null && client_id != null && fecha != null){
+      alert("fecha servidor " + fecha);
+      return this.http.get<Loan[]>(this.findSearchClientDate(client_id,fecha));
+    }
+    
   }
 
   findSearchFilter(game_id?: number, client_id?: number, fecha?:string): string {
@@ -112,6 +118,23 @@ if (client_id != null){
 
   }
  
+  findSearchClientDate(client : number, fecha : string){
+  let params ='';
+   
+
+  if(fecha != null){
+  params += 'fecha=' + fecha;
+  }
+  if(client != null){
+  if(params !='') params +="&";
+  params +="client_id=" + client;
+}
+    let url = 'http://localhost:8080/load/findSearchClientDate'
+    if (params == '') return url
+    else return url + '?' + params; 
+
+  
+  }
   saveLoan(loan: Loan): Observable<Loan> {
     let url = 'http://localhost:8080/load';
     if (loan.id != null){

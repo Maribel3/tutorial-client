@@ -29,12 +29,7 @@ import { ViewChild } from '@angular/core';
   
 
 export class LoanListComponent implements OnInit {
-  @ViewChild('input', { read: MatInput }) input: MatInput;
-  ngAfterViewInit() { }
-
-  
-  
-  
+ 
   pageNumber: number = 0;
   pageSize: number = 5;
   totalElements: number = 0;
@@ -45,7 +40,6 @@ export class LoanListComponent implements OnInit {
 
   games: Game[];
  
-
   loan : Loan;
   clients : Client[];
   selectedGame : Game;
@@ -110,14 +104,14 @@ onSelectGame(games: Game) : number{
       pageable.pageNumber = event.pageIndex;
     }
 
-  
-
   }
   onCleanFilter(): void{
     this.selectedGame = null;
     this.selectedClient = null;
     this.onSearch();
-   
+   this.loanService.getLoans().subscribe(
+     loan => this.dataSource.data = loan
+   );
   }
 
   onSearch(): void {
@@ -138,6 +132,7 @@ onSelectGame(games: Game) : number{
       fechaBusqueda = this.fetString;
     }
 
+    alert("Fecha busqueda " + fechaBusqueda)
     this.loanService.getLoans(idGame, idClient,fechaBusqueda).subscribe(
       loan1 => this.dataSource.data = loan1
 
@@ -164,12 +159,9 @@ onSelectGame(games: Game) : number{
     });
   }
 
-   
-   
 enviar () {
 this.formatDate= this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
 this.fetString = this.pd.transform(this.range.controls.start.value,'YYY-MM-dd');
-
 
 }
  public  searchDate(){

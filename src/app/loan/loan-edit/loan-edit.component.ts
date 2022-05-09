@@ -92,50 +92,26 @@ export class LoanEditComponent implements OnInit {
 
     let params = '';
 
-   // if (this.selectedGame != null) {
-      
-    //  params += 'fecha=' + this.fechaInicialBase;
-    //}
-
-    //if (this.fechaInicialBase != null) {
-      //if (params != '') params += "&";
-
-      //params += "game_id=" + this.selectedGame;
-
-    //}//cambio fecha de inicio por fin
-   // let urlValidateLoan = 'http://localhost:8080/load/validateLoan?fecha='+this.fechaInicialBase+'&game_id='+this.selectedGame.id ;
-   // let urlValidateClientLoan = 'http://localhost:8080/load/validateGameLoad?fecha=' + this.fechaFinBase + '&client_id=' + this.selectedClient.id;
-    // days da resto de la fecha de inicio y la fecha fin
-
     
     let days = (this.range.controls.end.value.getDate() - (this.range.controls.start.value.getDate()));
     this.fechaSumada = this.range.controls.start.value.setDate(this.range.controls.start.value.getDate()+days);
     this.sumaFecha = this.pd.transform(this.fechaSumada, 'YYYY-MM-dd');
    
-    let urlClientCount = 'http://localhost:8080/load/fechaInferior?fecha=' + this.sumaFecha + '&client_id=' + this.selectedClient.id;
-    let urlValidateLoan = 'http://localhost:8080/load/validateLoan?fecha=' + this.sumaFecha + '&game_id=' + this.selectedGame.id;
-   // let urlValidateClientLoan = 'http://localhost:8080/load/validateGameLoad?fecha=' + this.fechaFinBase + '&client_id=' + this.selectedClient.id;
-
-    //alert("suma de fecha más el resto " + this.sumaFecha);
-    //alert("fecha sin sumar " + this.fechaInicialBase + "fecha sumada " + this.sumaFecha);
-    //alert("fecha fin base " + this.fechaFinBase);
-    //alert("fecha inicio " + this.fechaInicialBase);
-
+    let urlClientCount = 'http://localhost:8080/load/fechaInferior?fecha=' + this.sumaFecha + '&client=' + this.selectedClient.id;
+    let urlValidateLoan = 'http://localhost:8080/load/validateLoan?fecha=' + this.sumaFecha + '&game=' + this.selectedGame.id;
+   
     this.http.get<number>(urlValidateLoan).subscribe(responseDataLoan =>{
-     alert("game_id " + this.selectedGame.id);
-    // this.http.get<number>(urlValidateClientLoan).subscribe(responseDateClient =>{
+    
      this.http.get<number>(urlClientCount).subscribe( responseClientCount => {
-    alert("client_id " + this.selectedClient.id);
+    
      
       
        this.resultadoCountGameDate = responseClientCount;
-      // this.resultadoGameClient = responseDateClient;
-       alert("método fechaInferior" + this.resultadoCountGameDate);
+      
       this.resultadoLoan = responseDataLoan;
-       alert("método validateLoan " + this.resultadoLoan);
-      //alert("contar validateLoan " + this.resultadoLoan);
+      
       if  (days <= 14 && new Date(this.range.controls.start.value)
-        <= new Date(this.range.controls.end.value) && this.resultadoCountGameDate <= 2 && this.resultadoLoan ==0 ){
+        <= new Date(this.range.controls.end.value) && this.resultadoCountGameDate <= 1 && this.resultadoLoan ==0 ){
           alert("entro");
        this.loan.client.id = this.selectedClient.id;
        this.loan.game.id = this.selectedGame.id;
@@ -162,14 +138,14 @@ export class LoanEditComponent implements OnInit {
           alert("Tiene dos juegos prestados");
           this.dialogRef.close();
         }
-        if(this.resultadoCountGameDate>=1){
-          alert("No puede crear un juego anterior");
+        if(this.resultadoCountGameDate==2){
+          alert("Tiene dos juegos prestados el mismo día, el máximo son dos juegos");
           this.dialogRef.close();
         }
 
       }
      });// fin de consulta clientCount
-    // });// fin consulta juegos
+   
     });//fin consulta fecha duplicada
 
    

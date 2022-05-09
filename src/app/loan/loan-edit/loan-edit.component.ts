@@ -86,7 +86,7 @@ export class LoanEditComponent implements OnInit {
     
     this.fechaInicial = this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY' );
     this.fechaFinal = this.pd.transform(this.range.controls.end.value, 'dd-MM-YYYY');
-  alert("fecha final formateada " + this.fechaFinal);
+
     this.fechaInicialBase = this.pd.transform(this.range.controls.start.value, 'YYYY-MM-dd');
     this.fechaFinBase = this.pd.transform(this.range.controls.end.value, 'YYYY-MM-dd');
 
@@ -97,6 +97,7 @@ export class LoanEditComponent implements OnInit {
     this.fechaSumada = this.range.controls.start.value.setDate(this.range.controls.start.value.getDate()+days);
     this.sumaFecha = this.pd.transform(this.fechaSumada, 'YYYY-MM-dd');
    
+    let urlComprobarFecha = 'http://localhost:8080/load/validarDateReturn?fecha=' + this.sumaFecha + '&client=' + this.selectedClient.id;
     let urlClientCount = 'http://localhost:8080/load/fechaInferior?fecha=' + this.sumaFecha + '&client=' + this.selectedClient.id;
     let urlValidateLoan = 'http://localhost:8080/load/validateLoan?fecha=' + this.sumaFecha + '&game=' + this.selectedGame.id;
    
@@ -104,15 +105,28 @@ export class LoanEditComponent implements OnInit {
     
      this.http.get<number>(urlClientCount).subscribe( responseClientCount => {
     
+     this.http.get<number>(urlComprobarFecha).subscribe( responseFecha => {
+
+
+    
+       this.resultadoGameClient = responseFecha;
+      this.resultadoCountGameDate = responseClientCount;
+    
+      this.resultadoLoan = responseDataLoan;
+     
+
      
       
-       this.resultadoCountGameDate = responseClientCount;
-      
-      this.resultadoLoan = responseDataLoan;
-      
+        if (this.resultadoGameClient >= 1 && this.resultadoCountGameDate == 1) {
+          alert("No puede tener tres juegos prestados en la misma fecha");
+          this.dialogRef.close();
+        }
+     
+      else {
+
       if  (days <= 14 && new Date(this.range.controls.start.value)
         <= new Date(this.range.controls.end.value) && this.resultadoCountGameDate <= 1 && this.resultadoLoan ==0 ){
-          alert("entro");
+         
        this.loan.client.id = this.selectedClient.id;
        this.loan.game.id = this.selectedGame.id;
        this.loan.dateLoan = this.fechaInicialBase;
@@ -132,9 +146,7 @@ export class LoanEditComponent implements OnInit {
           this.dialogRef.close();
         }
         if(this.resultadoGameClient>2){
-          alert("juegos " + this.resultadoGameClient);
-          
-           
+        
           alert("Tiene dos juegos prestados");
           this.dialogRef.close();
         }
@@ -142,10 +154,12 @@ export class LoanEditComponent implements OnInit {
           alert("Tiene dos juegos prestados el mismo día, el máximo son dos juegos");
           this.dialogRef.close();
         }
-
       }
+    }
+      
+     });// fin validarDateReturn
      });// fin de consulta clientCount
-   
+    
     });//fin consulta fecha duplicada
 
    

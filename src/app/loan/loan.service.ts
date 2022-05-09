@@ -23,10 +23,10 @@ let params ='';
 
 if (client_id != null){
  // if (params != '') params += "&";
-  params += "client_id=" + client_id;
+  params += "client=" + client_id;
 
 }
-    let url = 'http://localhost:8080/load/client/'
+    let url = 'http://localhost:8080/load/findClient/'
 
     if (params == '') return url;
     else return url + '?' + params;
@@ -58,7 +58,7 @@ if (client_id != null){
 
     }
 
-    let url = 'http://localhost:8080/load/search/'
+    let url = 'http://localhost:8080/load/findGameClient/'
 
     if (params =='') return url;
     else return url +'?' + params;
@@ -86,10 +86,17 @@ if (client_id != null){
     }
 
     if (game_id ==null && client_id != null && fecha != null){
-      alert("fecha servidor " + fecha);
+     
       return this.http.get<Loan[]>(this.findSearchClientDate(client_id,fecha));
     }
-    
+    if (game_id != null && client_id == null && fecha != null) {
+     
+      return this.http.get<Loan[]>(this.findGameDate(game_id, fecha));
+    }
+    if(game_id != null && client_id != null && fecha == null){
+      return this.http.get<Loan[]>(this.findGameClient(game_id,client_id));
+    }
+
   }
 
   findSearchFilter(game_id?: number, client_id?: number, fecha?:string): string {
@@ -134,6 +141,40 @@ if (client_id != null){
     else return url + '?' + params; 
 
   
+  }
+  findGameDate(game: number, fecha: string) {
+    let params = '';
+
+
+    if (fecha != null) {
+      params += 'fecha=' + fecha;
+    }
+    if (game != null) {
+      if (params != '') params += "&";
+      params += "client_id=" + game;
+    }
+    let url = 'http://localhost:8080/load/findGameDate'
+    if (params == '') return url
+    else return url + '?' + params;
+
+
+  }
+  findGameClient(game: number, client: number) {
+    let params = '';
+
+
+    if (game != null) {
+      params += 'game=' + game;
+    }
+    if (client != null) {
+      if (params != '') params += "&";
+      params += "client=" + client;
+    }
+    let url = 'http://localhost:8080/load/findGameClient'
+    if (params == '') return url
+    else return url + '?' + params;
+
+
   }
   saveLoan(loan: Loan): Observable<Loan> {
     let url = 'http://localhost:8080/load';

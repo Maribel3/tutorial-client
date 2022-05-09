@@ -136,12 +136,18 @@ onSelectGame(games: Game) : number{
       fechaBusqueda = this.fetString;
     }
 
-   
-    this.loanService.getLoans(idGame, idClient,fechaBusqueda).subscribe(
-      loan1 => this.dataSource.data = loan1
-
-    );
-   
+ if(fechaBusqueda == null){
+   this.loanService.getLoans(idGame, idClient).subscribe(
+     loan => this.dataSource.data = loan
+   );
+ }
+ if (fechaBusqueda != null){
+   this.loanService.getLoans(idGame, idClient, fechaBusqueda).subscribe(
+     loan => this.dataSource.data = loan
+   );
+ }
+      
+    
     
   }
   createLoan() {

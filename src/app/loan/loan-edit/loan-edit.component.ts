@@ -111,16 +111,15 @@ export class LoanEditComponent implements OnInit {
     let days = (this.range.controls.end.value.getDate() - (this.range.controls.start.value.getDate()));
     this.fechaSumada = this.range.controls.start.value.setDate(this.range.controls.start.value.getDate()+days);
     this.sumaFecha = this.pd.transform(this.fechaSumada, 'YYYY-MM-dd');
-    alert("client 1: " + this.selectedClient.id);
-    alert("game 1: " + this.selectedGame.id);
+   
     let urlClientCount = 'http://localhost:8080/load/fechaInferior?fecha=' + this.sumaFecha + '&client_id=' + this.selectedClient.id;
     let urlValidateLoan = 'http://localhost:8080/load/validateLoan?fecha=' + this.sumaFecha + '&game_id=' + this.selectedGame.id;
    // let urlValidateClientLoan = 'http://localhost:8080/load/validateGameLoad?fecha=' + this.fechaFinBase + '&client_id=' + this.selectedClient.id;
 
-    alert("suma de fecha más el resto " + this.sumaFecha);
-    alert("fecha sin sumar " + this.fechaInicialBase + "fecha sumada " + this.sumaFecha);
-    alert("fecha fin base " + this.fechaFinBase);
-    alert("fecha inicio " + this.fechaInicialBase);
+    //alert("suma de fecha más el resto " + this.sumaFecha);
+    //alert("fecha sin sumar " + this.fechaInicialBase + "fecha sumada " + this.sumaFecha);
+    //alert("fecha fin base " + this.fechaFinBase);
+    //alert("fecha inicio " + this.fechaInicialBase);
 
     this.http.get<number>(urlValidateLoan).subscribe(responseDataLoan =>{
      alert("game_id " + this.selectedGame.id);

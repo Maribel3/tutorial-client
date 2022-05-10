@@ -68,7 +68,7 @@ if (client_id != null){
     
   }
   getLoan(pageable: Pageable) : Observable<LoanPage>{
-    return this.http.post<LoanPage>('http://localhost:8080/load', {pageable : pageable});
+    return this.http.post<LoanPage>('http://localhost:8080/load/findSearchFilterPage/', {pageable : pageable});
   }
   getLoans(game_id?: number,client_id?: number, fecha?:string): Observable<Loan[] >{
     if(game_id == null && client_id == null && fecha == null){

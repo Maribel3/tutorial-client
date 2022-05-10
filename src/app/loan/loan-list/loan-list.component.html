@@ -2,16 +2,16 @@
     <div class="filters">
         <form>
 
-            <mat-form-field [formGroup]="range">
+            <mat-form-field >
                 <mat-label>Selecciona un juego</mat-label>
-                <mat-select disableRipple name="titleGame" formControlName="comboGame">
+                <mat-select  #selectGame disableRipple name="titleGame" >
                     <mat-option *ngFor="let game  of games" [value]="game" (click)="onSelectGame(game)">{{game.title}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field [formGroup]="range">
+            <mat-form-field >
                 <mat-label>Selecciona un cliente</mat-label>
-                <mat-select disableRipple name="nameClient" formControlName="comboClient">
+                <mat-select  #selectClient disableRipple name="nameClient" >
                     <mat-option *ngFor="let client of clients" [value]="client" (click)="onSelectClient(client)">
                         {{client.name}}</mat-option>
                 </mat-select>

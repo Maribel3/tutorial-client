@@ -20,6 +20,7 @@ import { Pageable } from 'src/app/core/model/page/Pageable';
 import { PageEvent } from '@angular/material/paginator';
 import { MatInput } from '@angular/material/input';
 import { ViewChild } from '@angular/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-loan-list',
@@ -32,6 +33,12 @@ export class LoanListComponent implements OnInit {
   @ViewChild('fromInput', {
     read: MatInput
   }) fromInput: MatInput;
+  @ViewChild('selectGame', {
+    read : MatSelect
+  }) selectGame : MatSelect;
+  @ViewChild('selectClient', {
+    read: MatSelect
+  }) selectClient: MatSelect;
 
   pageNumber: number = 0;
   pageSize: number = 5;
@@ -80,10 +87,10 @@ onSelectGame(games: Game) : number{
   }
   ngOnInit(): void {
     this.loadPage();
-
+   
     this.searchDate();
       this.loanService.getLoans().subscribe(
-        loan => this.dataSource.data = loan
+      loan => this.dataSource.data = loan
       );
     this.gameService.getGames().subscribe(
       games => this.games = games
@@ -108,11 +115,17 @@ onSelectGame(games: Game) : number{
       pageable.pageSize = event.pageSize
       pageable.pageNumber = event.pageIndex;
     }
+    this.loanService.getLoan(pageable).subscribe(data => {
+      this.dataSource.data = data.content;
+      this.pageNumber = data.pageable.pageNumber;
+      this.pageSize = data.pageable.pageSize;
+      this.totalElements = data.totalElements;
 
+    });
   }
   onCleanFilter(): void{
-    this.range.controls.comboClient = null;
-    this.range.controls.comboGame = null;
+   this.selectClient.value = undefined;
+   this.selectGame.value = undefined;
     this.fromInput.value = '';
     this.onSearch();
    this.loanService.getLoans().subscribe(

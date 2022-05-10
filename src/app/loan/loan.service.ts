@@ -3,6 +3,8 @@ import { Observable,of } from 'rxjs';
 import { Loan } from './model/Loan';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { LoanPage } from './model/LoanPage';
+import { Pageable } from '../core/model/page/Pageable';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +66,9 @@ if (client_id != null){
     else return url +'?' + params;
 
     
+  }
+  getLoan(pageable: Pageable) : Observable<LoanPage>{
+    return this.http.post<LoanPage>('http://localhost:8080/load', {pageable : pageable});
   }
   getLoans(game_id?: number,client_id?: number, fecha?:string): Observable<Loan[] >{
     if(game_id == null && client_id == null && fecha == null){

@@ -13,9 +13,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { range } from 'rxjs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ThisReceiver } from '@angular/compiler';
 import { DatePipe } from '@angular/common';
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { Pageable } from 'src/app/core/model/page/Pageable';
 import { PageEvent } from '@angular/material/paginator';
 import { MatInput } from '@angular/material/input';
@@ -49,7 +47,7 @@ export class LoanListComponent implements OnInit {
  public formatDate: string;
 
   games: Game[];
- 
+  paginar : Pageable;
   loan : Loan;
   clients : Client[];
   selectedGame : Game;
@@ -87,11 +85,13 @@ onSelectGame(games: Game) : number{
   }
   ngOnInit(): void {
     this.loadPage();
-   
-    this.searchDate();
-      this.loanService.getLoans().subscribe(
-      loan => this.dataSource.data = loan
-      );
+    this.loanService.getLoan().subscribe(data => {
+    this.dataSource.data = data.content;
+    this.pageNumber = data.pageable.pageNumber;
+    this.pageSize = data.pageable.pageSize;
+    this.totalElements = data.totalElements;
+    });
+
     this.gameService.getGames().subscribe(
       games => this.games = games
     );
@@ -100,6 +100,7 @@ onSelectGame(games: Game) : number{
     );
     
   }
+
   loadPage(event?: PageEvent) {
 
     let pageable: Pageable = {
@@ -114,8 +115,25 @@ onSelectGame(games: Game) : number{
     if (event != null) {
       pageable.pageSize = event.pageSize
       pageable.pageNumber = event.pageIndex;
+      this.paginar = pageable;
     }
-    this.loanService.getLoan(pageable).subscribe(data => {
+   
+    this.fetString = this.pd.transform(this.range.controls.start.value, 'YYY-MM-dd');
+    this.loanService.seleccionarFecha(this.fetString);
+
+    let idGame = null;
+    if (this.selectedGame != null) {
+      idGame = this.selectedGame.id;
+    }
+    let idClient = null;
+    if (this.selectedClient != null) {
+      idClient = this.selectedClient.id;
+    }
+    let fechaBusqueda = null;
+    if (this.fetString != null) {
+      fechaBusqueda = this.fetString;
+    }
+    this.loanService.getLoan(idGame,idClient,fechaBusqueda,pageable).subscribe(data => {
       this.dataSource.data = data.content;
       this.pageNumber = data.pageable.pageNumber;
       this.pageSize = data.pageable.pageSize;
@@ -126,11 +144,27 @@ onSelectGame(games: Game) : number{
   onCleanFilter(): void{
    this.selectClient.value = undefined;
    this.selectGame.value = undefined;
-    this.fromInput.value = '';
-    this.onSearch();
-   this.loanService.getLoans().subscribe(
-     loan => this.dataSource.data = loan
-   );
+   this.fromInput.value = '';
+    let idGame = null;
+    if (this.selectedGame != null) {
+      idGame = this.selectedGame.id;
+    }
+    let idClient = null;
+    if (this.selectedClient != null) {
+      idClient = this.selectedClient.id;
+    }
+    let fechaBusqueda = null;
+    if (this.fetString != null) {
+      fechaBusqueda = this.fetString;
+    }
+    this.loanService.getLoan().subscribe(data => {
+      this.dataSource.data = data.content;
+      this.pageNumber = data.pageable.pageNumber;
+      this.pageSize = data.pageable.pageSize;
+      this.totalElements = data.totalElements;
+
+    });
+
   }
 
   onSearch(): void {
@@ -151,20 +185,14 @@ onSelectGame(games: Game) : number{
       fechaBusqueda = this.fetString;
     }
 
- if(fechaBusqueda == null){
-   this.loanService.getLoans(idGame, idClient).subscribe(
-     loan => this.dataSource.data = loan
-   );
- }
- if (fechaBusqueda != null){
-   this.loanService.getLoans(idGame, idClient, fechaBusqueda).subscribe(
-     loan => this.dataSource.data = loan
-   );
+
+    this.loanService.getLoan(idGame, idClient, fechaBusqueda, this.paginar).subscribe(data => {
+      this.dataSource.data = data.content;
+     
+    });
+
  }
       
-    
-    
-  }
   createLoan() {
     const dialogRef = this.dialog.open(LoanEditComponent, {
       data: {}
@@ -184,11 +212,11 @@ onSelectGame(games: Game) : number{
     });
   }
 
-enviar () {
-this.formatDate= this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
-this.fetString = this.pd.transform(this.range.controls.start.value,'YYY-MM-dd');
+//enviar () {
+//this.formatDate= this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
+//this.fetString = this.pd.transform(this.range.controls.start.value,'YYY-MM-dd');
 
-}
+//}
  public  searchDate(){
    this.fetString = this.pd.transform(this.range.controls.start.value, 'YYY-MM-dd');
  

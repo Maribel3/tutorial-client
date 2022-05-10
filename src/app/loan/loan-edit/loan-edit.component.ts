@@ -77,7 +77,7 @@ export class LoanEditComponent implements OnInit {
     this.gameService.getGames().subscribe(
       games => this.games = games
     );
-    this.loanService.getLoans().subscribe(
+    this.loanService.getLoan().subscribe(
       loan => loan = loan
     );
    
@@ -112,7 +112,7 @@ export class LoanEditComponent implements OnInit {
       this.resultadoCountGameDate = responseClientCount;
       this.resultadoLoan = responseDataLoan;
      
-        if(this.resultadoCountGameDate+this.resultadoGameClient==3 || this.resultadoCountGameDate==2){
+        if(this.resultadoCountGameDate+this.resultadoGameClient==3 || this.resultadoCountGameDate==2 && this.resultadoGameClient==0){
           alert("No puede tener tres juegos prestados en la misma fecha");
           this.dialogRef.close();
         }

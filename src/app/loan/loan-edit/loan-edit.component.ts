@@ -108,16 +108,11 @@ export class LoanEditComponent implements OnInit {
      this.http.get<number>(urlComprobarFecha).subscribe( responseFecha => {
 
 
-    
-       this.resultadoGameClient = responseFecha;
+      this.resultadoGameClient = responseFecha;
       this.resultadoCountGameDate = responseClientCount;
-    
       this.resultadoLoan = responseDataLoan;
      
-
-     
-      
-        if (this.resultadoGameClient >= 1 && this.resultadoCountGameDate == 1) {
+        if(this.resultadoCountGameDate+this.resultadoGameClient==3 || this.resultadoCountGameDate==2){
           alert("No puede tener tres juegos prestados en la misma fecha");
           this.dialogRef.close();
         }
@@ -150,7 +145,7 @@ export class LoanEditComponent implements OnInit {
           alert("Tiene dos juegos prestados");
           this.dialogRef.close();
         }
-        if(this.resultadoCountGameDate==2){
+        if(this.resultadoCountGameDate>=2){
           alert("Tiene dos juegos prestados el mismo día, el máximo son dos juegos");
           this.dialogRef.close();
         }

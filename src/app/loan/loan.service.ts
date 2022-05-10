@@ -80,7 +80,7 @@ if (client_id != null){
 
     }
     if( game_id == null && client_id == null && fecha != null){
-      return this.http.get<Loan[]>(this.findSearchFilter(game_id, client_id,fecha));
+      return this.http.get<Loan[]>(this.findDate(fecha));
     }
     
     if (game_id == null && client_id!= null && fecha==null){

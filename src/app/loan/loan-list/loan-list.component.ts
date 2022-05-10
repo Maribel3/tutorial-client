@@ -52,7 +52,9 @@ export class LoanListComponent implements OnInit {
   
   public range = new FormGroup({
     start: new FormControl(),
-    end : new FormControl()
+    end : new FormControl(),
+    comboGame : new FormControl(),
+    comboClient : new FormControl(),
   });
   constructor(
     
@@ -109,8 +111,8 @@ onSelectGame(games: Game) : number{
 
   }
   onCleanFilter(): void{
-    this.selectedGame = null;
-    this.selectedClient = null;
+    this.range.controls.comboClient = null;
+    this.range.controls.comboGame = null;
     this.fromInput.value = '';
     this.onSearch();
    this.loanService.getLoans().subscribe(

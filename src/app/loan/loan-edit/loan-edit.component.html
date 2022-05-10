@@ -8,21 +8,21 @@
         </mat-form-field>
     <mat-form-field>
         <mat-label>Selecciona un juego</mat-label>
-        <mat-select disableRipple [(ngModel)]="loan.game" name="game" >
+        <mat-select disableRipple [(ngModel)]="loan.game" name="game"  required="">
             <mat-option *ngFor="let game  of games" [value]="game" (click)="onSelectGame(game)">{{game.title}}</mat-option>
     
         </mat-select>
     </mat-form-field>
     <mat-form-field>
         <mat-label>Selecciona un cliente</mat-label>
-        <mat-select disableRipple [(ngModel)]="loan.client" name="client">
+        <mat-select disableRipple [(ngModel)]="loan.client" name="client" required="">
             <mat-option *ngFor="let client of clients"  [value]="client" (click)="onSelectClient(client)">{{client.name}}
             </mat-option>
         </mat-select>
     
     </mat-form-field>
     <mat-form-field [formGroup]="range">
-        <input matInput [matDatepicker]="myDatePicker" formControlName="start" name="dateLoan">
+        <input matInput [matDatepicker]="myDatePicker" formControlName="start" name="dateLoan" required>
         <mat-datepicker-toggle [for]="myDatePicker" matSuffix></mat-datepicker-toggle>
         <mat-datepicker #myDatePicker></mat-datepicker>
     </mat-form-field>

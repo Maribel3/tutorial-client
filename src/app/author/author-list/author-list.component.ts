@@ -33,7 +33,6 @@ export class AuthorListComponent implements OnInit {
   }
 
   loadPage(event?: PageEvent) {
-
     let pageable: Pageable = {
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
@@ -42,18 +41,22 @@ export class AuthorListComponent implements OnInit {
         direction: 'ASC'
       }]
     }
-
+    
+   
     if (event != null) {
       pageable.pageSize = event.pageSize
       pageable.pageNumber = event.pageIndex;
+      
     }
-
+    
     this.authorService.getAuthors(pageable).subscribe(data => {
       this.dataSource.data = data.content;
       this.pageNumber = data.pageable.pageNumber;
       this.pageSize = data.pageable.pageSize;
       this.totalElements = data.totalElements;
+     
     });
+    alert("pageSize " + this.pageSize);
 
   }
 

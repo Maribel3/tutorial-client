@@ -16,6 +16,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatNativeDateModule,
     MatDialogModule,
     MatPaginatorModule,
+    HttpClientModule
 
   
     

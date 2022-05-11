@@ -58,8 +58,8 @@
                 <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
-            <mat-paginator (page)="loadPage($event)" [pageSizeOptions]="[5, 10, 20]" [pageIndex]="pageNumber"
-                [pageSize]="pageSize" [length]="totalElements" showFirstLastButtons></mat-paginator>
+        <mat-paginator (page)="loadPage($event)" [pageSizeOptions]="[3, 5, 10]" [pageIndex]="pageNumber" [pageSize]="pageSize"
+            [length]="totalElements" showFirstLastButtons></mat-paginator>
             <div class="buttons">
                 <button mat-flat-button color="primary" (click)="createLoan()">Nuevo Préstamo</button>
             </div>

@@ -28,6 +28,10 @@ import { MatSelect } from '@angular/material/select';
   
 
 export class LoanListComponent implements OnInit {
+  pageNumber: number = 0;
+  pageSize: number = 5;
+  totalElements: number = 0;
+
   @ViewChild('fromInput', {
     read: MatInput
   }) fromInput: MatInput;
@@ -38,16 +42,12 @@ export class LoanListComponent implements OnInit {
     read: MatSelect
   }) selectClient: MatSelect;
 
-  pageNumber: number = 0;
-  pageSize: number = 5;
-  totalElements: number = 0;
-
  public fec : Date;
  public fetString: string;
  public formatDate: string;
 
   games: Game[];
-  paginar : Pageable;
+ // paginar : Pageable;
   loan : Loan;
   clients : Client[];
   selectedGame : Game;
@@ -85,13 +85,6 @@ onSelectGame(games: Game) : number{
   }
   ngOnInit(): void {
     this.loadPage();
-    this.loanService.getLoan().subscribe(data => {
-    this.dataSource.data = data.content;
-    this.pageNumber = data.pageable.pageNumber;
-    this.pageSize = data.pageable.pageSize;
-    this.totalElements = data.totalElements;
-    });
-
     this.gameService.getGames().subscribe(
       games => this.games = games
     );
@@ -103,7 +96,8 @@ onSelectGame(games: Game) : number{
 
   loadPage(event?: PageEvent) {
 
-    let pageable: Pageable = {
+     let pageable: Pageable = {
+     
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
       sort: [{
@@ -111,11 +105,10 @@ onSelectGame(games: Game) : number{
         direction: 'ASC'
       }]
     }
-
     if (event != null) {
       pageable.pageSize = event.pageSize
       pageable.pageNumber = event.pageIndex;
-      this.paginar = pageable;
+    
     }
    
     this.fetString = this.pd.transform(this.range.controls.start.value, 'YYY-MM-dd');
@@ -133,13 +126,17 @@ onSelectGame(games: Game) : number{
     if (this.fetString != null) {
       fechaBusqueda = this.fetString;
     }
-    this.loanService.getLoan(idGame,idClient,fechaBusqueda,pageable).subscribe(data => {
-      this.dataSource.data = data.content;
-      this.pageNumber = data.pageable.pageNumber;
-      this.pageSize = data.pageable.pageSize;
-      this.totalElements = data.totalElements;
 
-    });
+    //llega bien
+    this.loanService.getLoan(idGame, idClient, fechaBusqueda, pageable).subscribe(dataLoan => {
+      this.dataSource.data = dataLoan.content;
+      this.pageNumber = dataLoan.pageable.pageNumber;
+    //pageSize coge 20
+    
+      this.pageSize = dataLoan.pageable.pageSize;
+      this.totalElements = dataLoan.totalElements;
+      });
+    
   }
   onCleanFilter(): void{
    this.selectClient.value = undefined;
@@ -186,10 +183,9 @@ onSelectGame(games: Game) : number{
     }
 
 
-    this.loanService.getLoan(idGame, idClient, fechaBusqueda, this.paginar).subscribe(data => {
-      this.dataSource.data = data.content;
-     
-    });
+ //  this.loanService.getLoan(idGame, idClient, fechaBusqueda, this.paginar).subscribe(data => {
+   //   this.dataSource.data = data.content;
+     //    });
 
  }
       

@@ -23,10 +23,10 @@ export class LoanService {
   
    
   getLoan(game?: number, client?: number, fecha?:string, pageable?: Pageable) : Observable<LoanPage>{
-    
-    
+ 
     return this.http.post<LoanPage>(this.findSearchFilterPage(game,client,fecha,pageable), {pageable : pageable});
   }
+
   
   saveLoan(loan: Loan): Observable<Loan> {
     let url = 'http://localhost:8080/load';

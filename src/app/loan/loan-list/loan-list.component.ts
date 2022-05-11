@@ -31,7 +31,6 @@ export class LoanListComponent implements OnInit {
   pageNumber: number = 0;
   pageSize: number = 5;
   totalElements: number = 0;
-
   @ViewChild('fromInput', {
     read: MatInput
   }) fromInput: MatInput;
@@ -45,14 +44,13 @@ export class LoanListComponent implements OnInit {
  public fec : Date;
  public fetString: string;
  public formatDate: string;
-
+ 
   games: Game[];
- // paginar : Pageable;
   loan : Loan;
   clients : Client[];
   selectedGame : Game;
   selectedClient : Client;
-  dataSource = new MatTableDataSource<Loan>();
+  dataSource: any = new MatTableDataSource<Loan>();
   displayedColumns: string[]=['id','Game','Client','Date_loan','Date_return','action'];
   
   public range = new FormGroup({
@@ -106,6 +104,7 @@ onSelectGame(games: Game) : number{
       }]
     }
     if (event != null) {
+
       pageable.pageSize = event.pageSize
       pageable.pageNumber = event.pageIndex;
     
@@ -127,12 +126,10 @@ onSelectGame(games: Game) : number{
       fechaBusqueda = this.fetString;
     }
 
-    //llega bien
+    
     this.loanService.getLoan(idGame, idClient, fechaBusqueda, pageable).subscribe(dataLoan => {
       this.dataSource.data = dataLoan.content;
       this.pageNumber = dataLoan.pageable.pageNumber;
-    //pageSize coge 20
-    
       this.pageSize = dataLoan.pageable.pageSize;
       this.totalElements = dataLoan.totalElements;
       });
@@ -154,14 +151,10 @@ onSelectGame(games: Game) : number{
     if (this.fetString != null) {
       fechaBusqueda = this.fetString;
     }
-    this.loanService.getLoan().subscribe(data => {
-      this.dataSource.data = data.content;
-      this.pageNumber = data.pageable.pageNumber;
-      this.pageSize = data.pageable.pageSize;
-      this.totalElements = data.totalElements;
-
-    });
-
+    this.loanService.getLoanAll().subscribe( 
+      loan => this.dataSource.data = loan
+    )
+    this.loadPage();
   }
 
   onSearch(): void {
@@ -181,11 +174,7 @@ onSelectGame(games: Game) : number{
     if(this.fetString !=null){
       fechaBusqueda = this.fetString;
     }
-
-
- //  this.loanService.getLoan(idGame, idClient, fechaBusqueda, this.paginar).subscribe(data => {
-   //   this.dataSource.data = data.content;
-     //    });
+     this.loadPage();
 
  }
       
@@ -208,11 +197,6 @@ onSelectGame(games: Game) : number{
     });
   }
 
-//enviar () {
-//this.formatDate= this.pd.transform(this.range.controls.start.value, 'dd-MM-YYYY');
-//this.fetString = this.pd.transform(this.range.controls.start.value,'YYY-MM-dd');
-
-//}
  public  searchDate(){
    this.fetString = this.pd.transform(this.range.controls.start.value, 'YYY-MM-dd');
  

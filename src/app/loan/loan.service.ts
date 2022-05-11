@@ -27,6 +27,9 @@ export class LoanService {
     return this.http.post<LoanPage>(this.findSearchFilterPage(game,client,fecha,pageable), {pageable : pageable});
   }
 
+  getLoanAll(): Observable<Loan[]> {
+    return this.http.get<Loan[]>('http://localhost:8080/load');
+  }
   
   saveLoan(loan: Loan): Observable<Loan> {
     let url = 'http://localhost:8080/load';

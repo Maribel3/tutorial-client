@@ -20,7 +20,10 @@ export class LoanService {
 
   ) { }
 
-  
+  getLoan2(game?: number, client?: number, fecha?:string, pageable?: Pageable) : Observable<LoanPage>{
+ 
+    return this.http.post<LoanPage>("http://localhost:8080/load/", {gameId:game, clientId:client, date:fecha, pageable:pageable});
+  }
    
   getLoan(game?: number, client?: number, fecha?:string, pageable?: Pageable) : Observable<LoanPage>{
  
@@ -66,7 +69,6 @@ export class LoanService {
      else return url + '?' + params;
    
    }
- 
 
   seleccionarFecha(fecha: string){
    this.conversion = fecha;

@@ -127,7 +127,7 @@ onSelectGame(games: Game) : number{
     }
 
     
-    this.loanService.getLoan(idGame, idClient, fechaBusqueda, pageable).subscribe(dataLoan => {
+    this.loanService.getLoan2(idGame, idClient, fechaBusqueda, pageable).subscribe(dataLoan => {
       this.dataSource.data = dataLoan.content;
       this.pageNumber = dataLoan.pageable.pageNumber;
       this.pageSize = dataLoan.pageable.pageSize;
